@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create a VPC and Private and Public Subnet
+ 
+Metadata:
+  template metadata
+
+Parameters:
+  VPCCIDR: 
+  Default: 10.0.0.0/16
+  Description: Enter the IP range for this VPC
+  Type: String
+
+  PublicSN1CIDR: 
+  Default: 10.1.0.0/24
+  Description: Enter the IP range for this PublicSubnet1
+  Type: String
+
+  PrivateSN1CIDR: 
+  Default: 10.2.0.0/24
+  Description: Enter the IP range for this PrivateSubnet1
+  Type: String
+
+
+Resources: 
+  VPC:
+  Type: AWS::EC2::VPC 
+  Properties:
+  CIDRBlock:10.0.0.0/16
+  EnableDnsHostnames: False
+  EnableDnsSupport: False
+  InstanceTenancy: Default
+  Tags: 
+    - Key: Name
+      Value: CFT-VPC
+
+  InternetGateway:
+  Type: AWS::EC2::InternetGateway
+  Properties: 
+  Tags: 
+    - Key: Name
+      Value: CFT-IGW
+
+  AttachGateway:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties:
+    VpcId: !Ref VPC
+    InternetGatewayId: !Ref InetrnetGateway
+
+  PublicSN1
+  Type: AWS::EC2::Subnet
+  Properties: 
+  AssignIpv6AddressOnCreation: False
+  AvailabilityZone: ap-southeast-1a
+  CidrBlock: !Ref PublicSN1CIDR
+  MapPublicIpOnLaunch: True
+  Tags: 
+    - Key: Name
+      Value: PublicSN1
+  VpcId: !Ref VPC
+
+PrivateSN1
+  Type: AWS::EC2::Subnet
+  Properties: 
+  AssignIpv6AddressOnCreation: False
+  AvailabilityZone: ap-southeast-1a
+  CidrBlock: !Ref PrivateSN1CIDR
+  MapPublicIpOnLaunch: False
+  Tags: 
+    - Key: Name
+      Value: PrivateSN1
+  VpcId: !Ref VPC
+
